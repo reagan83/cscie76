@@ -7,6 +7,7 @@ package net.cs76.setup.Hello70852519;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 public class Hello70852519Activity extends Activity {
@@ -18,5 +19,7 @@ public class Hello70852519Activity extends Activity {
         TextView tv = new TextView(this);
         tv.setText("Hello, cs76!");
         setContentView(tv);
+        
+        Log.i("Hello", "Completed onCreate().");
     }
 }
