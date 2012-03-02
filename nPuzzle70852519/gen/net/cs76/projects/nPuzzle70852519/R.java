@@ -8,6 +8,9 @@
 package net.cs76.projects.nPuzzle70852519;
 
 public final class R {
+    public static final class array {
+        public static final int images=0x7f050000;
+    }
     public static final class attr {
     }
     public static final class drawable {
@@ -18,13 +21,16 @@ public final class R {
         public static final int sample_3=0x7f020004;
     }
     public static final class id {
-        public static final int imageGallery=0x7f050000;
+        public static final int gallery=0x7f060001;
+        public static final int verticalGallery=0x7f060000;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
+        public static final int list_item=0x7f030000;
+        public static final int main=0x7f030001;
     }
     public static final class string {
         public static final int app_name=0x7f040001;
+        public static final int contentDescription=0x7f040002;
         public static final int hello=0x7f040000;
     }
 }
