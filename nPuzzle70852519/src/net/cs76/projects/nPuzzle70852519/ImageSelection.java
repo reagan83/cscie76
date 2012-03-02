@@ -33,7 +33,7 @@ public class ImageSelection extends ListActivity implements AdapterView.OnItemCl
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, images);
         
 //        for (int i = 0; i < images.length - 1; i++) {
-            
+             
 //        }
         
         // set adapter as this adapter
