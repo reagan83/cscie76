@@ -16,5 +16,6 @@
         <item>image9</item>
     </string-array>
     <string name="contentDescription">image</string>
+    <string name="no_photos">No photos</string>
 
 </resources>

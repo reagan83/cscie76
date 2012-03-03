@@ -21,16 +21,38 @@ public final class R {
         public static final int sample_3=0x7f020004;
     }
     public static final class id {
-        public static final int gallery=0x7f060001;
-        public static final int verticalGallery=0x7f060000;
+        public static final int photoDescription=0x7f060001;
+        public static final int photoIcon=0x7f060000;
     }
     public static final class layout {
-        public static final int list_item=0x7f030000;
-        public static final int main=0x7f030001;
+        public static final int main=0x7f030000;
+        public static final int photo_item=0x7f030001;
     }
     public static final class string {
         public static final int app_name=0x7f040001;
         public static final int contentDescription=0x7f040002;
         public static final int hello=0x7f040000;
+        public static final int no_photos=0x7f040003;
     }
+    public static final class styleable {
+        /** Attributes that can be used with a HelloGallery.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #HelloGallery_android_galleryItemBackground net.cs76.projects.nPuzzle70852519:android_galleryItemBackground}</code></td><td></td></tr>
+           </table>
+           @see #HelloGallery_android_galleryItemBackground
+         */
+        public static final int[] HelloGallery = {
+            0x0101004c
+        };
+        /**
+          <p>This symbol is the offset where the {@link net.cs76.projects.nPuzzle70852519.R.attr#android_galleryItemBackground}
+          attribute's value can be found in the {@link #HelloGallery} array.
+          @attr name android:android_galleryItemBackground
+        */
+        public static final int HelloGallery_android_galleryItemBackground = 0;
+    };
 }
