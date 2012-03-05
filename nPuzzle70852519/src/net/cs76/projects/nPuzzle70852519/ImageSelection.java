@@ -1,13 +1,16 @@
 package net.cs76.projects.nPuzzle70852519;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.cs76.projects.nPuzzle70852519.R;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.lang.reflect.Field;
+
 
 /**
  * ImageSelection Class Activity
@@ -32,9 +37,7 @@ import android.widget.Toast;
  * @implements onItemClickListener
  */
 public class ImageSelection extends ListActivity implements AdapterView.OnItemClickListener {
-    
-    private ArrayList<GameImage> gameImages = null;
-    private ImageAdapter imageAdapter = null;
+    private static List<Integer> ImageIdList = null;
 
     /** Called when the activity is first created. */
     @Override
@@ -42,134 +45,101 @@ public class ImageSelection extends ListActivity implements AdapterView.OnItemCl
         
 //        try {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.main);
+           
+            ImageIdList = new ArrayList<Integer>();
             
-            gameImages = new ArrayList<GameImage>();
-            
-            gameImages.add(new GameImage("image00", R.drawable.sample_0));
-            gameImages.add(new GameImage("image01", R.drawable.sample_1));
-            gameImages.add(new GameImage("image02", R.drawable.sample_2));
-            gameImages.add(new GameImage("image03", R.drawable.sample_3));
-            
-            this.imageAdapter = new ImageAdapter(this, R.layout.photo_item, gameImages);
-            
-            setListAdapter(this.imageAdapter);
-                        
+            for (int i = 0; i < 10; i++) {
+                String p = getResources().getString(R.string.ImagePrefix);
+                int id = 0;
+                
+                id = getResources().getIdentifier("drawable/" + p + i, null, getPackageName());
+                Log.i("nPuzzle", "Testing-" + i + ": " + id );
+                
+                if (id > 0) {
+                    ImageIdList.add(id);                   
+                }
+                
+            }
+            Log.i("nPuzzle", "ImageIdList Size" + ImageIdList.size());
+
+            setListAdapter(new ImageAdapter(this));
+
 //        } catch (Exception e) {
             
 //        }
     }
     
-    
-    private class GameImage {
-        private String imageName;
-        private int imageId;
+    public void ImageSelectionClick(View v) {
+        Log.i("nPuzzle", "Clicked!");
         
-        public GameImage(String name, int id) {
-            imageName = name;
-            imageId = id;
-        }
-        
-        public String getImageName() {
-            return imageName;
-        }
-
-        public int getImageResourceId() {
-            return imageId;
-        }
     }
-    
-    private class ImageAdapter extends ArrayAdapter<GameImage> {
         
-        private ArrayList<GameImage> items = null;
+    private class ImageAdapter extends BaseAdapter {
+        private LayoutInflater li;
+        private Bitmap icon;
         
-        public ImageAdapter(Context context, int textViewResourceId, ArrayList<GameImage> items) {
-            super(context, textViewResourceId, items);
-            this.items = items;
+        public ImageAdapter(Context context) {
+            // store the layout inflater in a local variable
+            li = LayoutInflater.from(context);
+            
+            //icon = BitmapFactory.decodeResource()
         }
         
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v = convertView;
-            
-            if (v == null) {
-                LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.photo_item, null);
-            }
-
-            GameImage gi = items.get(position);
-            
-            if (gi != null) {
-                ImageView iv = null;
-                TextView tv = null;
-                
-                try {
-                
-                iv = (ImageView) iv.findViewById(R.id.photoIcon);
-                tv = (TextView) tv.findViewById(R.id.photoDescription);
-                } catch (Exception e) { 
-                
-                }
-                
-                if (iv != null) {
-                    iv.setImageResource(gi.getImageResourceId());
-                }
-                
-                if (tv != null) {
-                    tv.setText(gi.getImageName());
-                }
-            }
-            
-            return v;
-        }
-        
-        
-/*        
-        int mGalleryItemBackground;
-        private Context mContext;
-
-        private Integer[] mImageIds = {
-                R.drawable.sample_0,
-                R.drawable.sample_1,
-                R.drawable.sample_2,
-                R.drawable.sample_3
-        };
-
-        public ImageAdapter(Context c) {
-            mContext = c;
-            TypedArray attr = mContext.obtainStyledAttributes(R.styleable.HelloGallery);
-            mGalleryItemBackground = attr.getResourceId(
-                    R.styleable.HelloGallery_android_galleryItemBackground, 0);
-            attr.recycle();
-        }
-
         public int getCount() {
-            return mImageIds.length;
+            return ImageIdList.size();
         }
-
-        public Object getItem(int position) {
-            return position;
-        }
-
+        
         public long getItemId(int position) {
             return position;
         }
-
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView imageView = new ImageView(mContext);
-
-            imageView.setImageResource(mImageIds[position]);
-            imageView.setLayoutParams(new Gallery.LayoutParams(150, 100));
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            imageView.setBackgroundResource(mGalleryItemBackground);
-
-            return imageView;
+        
+        public Object getItem(int position) {
+            return position;
         }
-*/    }
+        
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+                        
+            if (convertView == null) {
+                convertView = li.inflate(R.layout.photo_item, null);
+                
+                holder = new ViewHolder();
+                
+                holder.text = (TextView) convertView.findViewById(R.id.text);
+                holder.image = (ImageView) convertView.findViewById(R.id.image);
+                
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            
+            holder.text.setText(getResources().getResourceName(ImageIdList.get(position)));
+            
+            icon = BitmapFactory.decodeResource(getResources(), ImageIdList.get(position));
+            
+            //holder.image.setImageBitmap(BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(ImageIdList[position], "drawable", "net.cs76.projects.nPuzzle70852519")));
+            
+            holder.image.setImageBitmap(icon);
+            
+            //convertView.setOnClickListener(l)
+
+            return convertView;
+        }
+        
+        class ViewHolder {
+            TextView text;
+            ImageView image;
+        }
+    }
     
+    public void onClickHandler(View v) {
+        Log.i("nPuzzle", "Click Handler!");
+    }
+            
     @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         // start new Game activity!!!
+        Log.i("nPuzzle", "Clicked!");
         
     }
 }
