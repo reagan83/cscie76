@@ -1,3 +1,9 @@
+/**
+ * Reagan Williams
+ * reagan.williams@gmail.com
+ * 70852519
+ */
+
 package net.cs76.projects.nPuzzle70852519;
 
 import java.util.ArrayList;
@@ -6,6 +12,7 @@ import java.util.List;
 import net.cs76.projects.nPuzzle70852519.R;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,10 +40,9 @@ import java.lang.reflect.Field;
  * an Image Gallery to select.
  * 
  * @author rwilliams
- * @extends Activity
- * @implements onItemClickListener
+ * @extends ListActivity
  */
-public class ImageSelection extends ListActivity implements AdapterView.OnItemClickListener {
+public class ImageSelection extends ListActivity {
     private static List<Integer> ImageIdList = null;
 
     /** Called when the activity is first created. */
@@ -101,7 +107,7 @@ public class ImageSelection extends ListActivity implements AdapterView.OnItemCl
             ViewHolder holder;
                         
             if (convertView == null) {
-                convertView = li.inflate(R.layout.photo_item, null);
+                convertView = li.inflate(R.layout.imagegallery, null);
                 
                 holder = new ViewHolder();
                 
@@ -121,7 +127,8 @@ public class ImageSelection extends ListActivity implements AdapterView.OnItemCl
             
             holder.image.setImageBitmap(icon);
             
-            //convertView.setOnClickListener(l)
+            convertView.setTag(ImageIdList.get(position));
+            convertView.setClickable(true);
 
             return convertView;
         }
@@ -132,14 +139,12 @@ public class ImageSelection extends ListActivity implements AdapterView.OnItemCl
         }
     }
     
+    /**
+     * There's an issue here with the trackball on the emulator.  NEED TO RESEARCH AND FIX!
+     */
     public void onClickHandler(View v) {
-        Log.i("nPuzzle", "Click Handler!");
-    }
-            
-    @Override
-    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-        // start new Game activity!!!
-        Log.i("nPuzzle", "Clicked!");
-        
+        Log.i("nPuzzle", "Click Handler - " + v.getTag());
+        Intent game = new Intent(v.getContext(), GamePlay.class);
+        startActivityForResult(game, 0);
     }
 }

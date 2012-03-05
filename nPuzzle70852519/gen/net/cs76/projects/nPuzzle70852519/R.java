@@ -18,12 +18,15 @@ public final class R {
         public static final int puzzle_3=0x7f020004;
     }
     public static final class id {
-        public static final int image=0x7f050000;
-        public static final int text=0x7f050001;
+        public static final int GameTable=0x7f050000;
+        public static final int image=0x7f050002;
+        public static final int text=0x7f050003;
+        public static final int tr1=0x7f050001;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
-        public static final int photo_item=0x7f030001;
+        public static final int gameboard=0x7f030000;
+        public static final int imagegallery=0x7f030001;
+        public static final int main=0x7f030002;
     }
     public static final class string {
         public static final int ImagePrefix=0x7f040003;
