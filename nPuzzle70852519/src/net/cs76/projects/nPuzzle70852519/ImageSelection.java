@@ -75,11 +75,6 @@ public class ImageSelection extends ListActivity {
 //        }
     }
     
-    public void ImageSelectionClick(View v) {
-        Log.i("nPuzzle", "Clicked!");
-        
-    }
-        
     private class ImageAdapter extends BaseAdapter {
         private LayoutInflater li;
         private Bitmap icon;
@@ -113,8 +108,7 @@ public class ImageSelection extends ListActivity {
                 
                 holder.text = (TextView) convertView.findViewById(R.id.text);
                 holder.image = (ImageView) convertView.findViewById(R.id.image);
-                
-                convertView.setTag(holder);
+
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
@@ -127,6 +121,7 @@ public class ImageSelection extends ListActivity {
             
             holder.image.setImageBitmap(icon);
             
+            // store the image resource id in the tag of the list row
             convertView.setTag(ImageIdList.get(position));
             convertView.setClickable(true);
 
@@ -144,7 +139,14 @@ public class ImageSelection extends ListActivity {
      */
     public void onClickHandler(View v) {
         Log.i("nPuzzle", "Click Handler - " + v.getTag());
+
         Intent game = new Intent(v.getContext(), GamePlay.class);
+
+        // retrieve the image resource id from the list row tag and send it to the new activity
+        game.putExtra("ImageResourceId", (Integer)v.getTag());
+        
+        Log.i("nPuzzle", "Storing as: " + v.getTag().toString());
+
         startActivityForResult(game, 0);
     }
 }

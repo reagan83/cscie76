@@ -27,13 +27,13 @@ public class GameBoard {
         return gameboard;
     }
     
-    public void generateTiles() {
+    public Bitmap[] generateTiles(Bitmap b) {
         // Bitmap slicing
-        
+        return Bitmap[]();
     }
     
     public void generateBlankTile() {
-        blankTile = new GameTile(new Bitmap(), 0, true);
+        //blankTile = new GameTile(new Bitmap(), 0, true);
     }
     
     
@@ -50,13 +50,13 @@ public class GameBoard {
     }
     
     public void moveTile(int oldPosition, int newPosition) {
-        if (validMove() == true) {
+        if (validMove(oldPosition, newPosition) == true) {
             
         }
     }
 
     private boolean validMove(int oldPosition, int newPosition) {
-        if (newPosition == blankTile.getPosition()) {
+        if (newPosition == blankTile.getTilePosition()) {
             return true;
         }
 
