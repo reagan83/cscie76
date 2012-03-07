@@ -47,6 +47,9 @@ import java.lang.reflect.Field;
  * @extends Activity
  */
 public class GamePlay extends Activity {
+    
+    GameBoard gb = null;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +91,7 @@ public class GamePlay extends Activity {
         
         image2.setImageBitmap(icon2);
         
-        GameBoard gb = new GameBoard(scaledIcon, 9);
+        gb = new GameBoard(scaledIcon, 9);
         
         ArrayList<GameTile[]> board = gb.getGameBoard();
         
@@ -119,29 +122,25 @@ public class GamePlay extends Activity {
 
                 ib.setTag(tiles[j].getTilePosition());
                 Log.i("nPuzzle", "Set tag: " + tiles[j].getTilePosition());
-                
+
                 ib.setOnClickListener(new View.OnClickListener() {
-                    
                     @Override
                     public void onClick(View v) {
-                        Log.i("nPuzzle", "Image touched!" + v.getTag());                        
+                        Log.i("nPuzzle", "Image touched!" + v.getTag());
+                        ImageButton b = (ImageButton) v;
+
+                        b.setImageBitmap(gb.getBlankTile().getBitmap());
                     }
                 });
-                               
 
                 tr2.addView(ib);
             }
-            
            
             tl.addView(tr2);
         }
 
         Log.i("nPuzzle", "onCreate GamePlay complete.");
 
-    }
-    
-    public void onTileClickHandler(View v) {
-        Log.i("nPuzzle", "Tile Click Handler - " + v.getTag());
     }
 
 }

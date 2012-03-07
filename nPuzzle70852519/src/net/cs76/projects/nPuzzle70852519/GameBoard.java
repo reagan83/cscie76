@@ -31,6 +31,11 @@ public class GameBoard {
         return gameBoard;
     }
     
+    public GameTile getBlankTile() {
+        return blankTile;
+    }
+
+    
     private void generateGameBoard() {
         
         // Bitmap slicing
