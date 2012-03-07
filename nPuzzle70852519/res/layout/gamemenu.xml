@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/shuffle"
+          android:title="@string/Shuffle" />
+    <item android:id="@+id/pickanother"
+          android:title="@string/PickAnother" />
+    
+    <group android:id="@+id/difficultygroup">
+	    <item android:id="@+id/easy"
+	          android:title="@string/Easy" />
+	    <item android:id="@+id/medium"
+	          android:title="@string/Medium" />
+	    <item android:id="@+id/hard"
+	          android:title="@string/Hard" />
+    </group>
+</menu>

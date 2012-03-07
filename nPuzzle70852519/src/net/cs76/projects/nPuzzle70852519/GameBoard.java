@@ -22,9 +22,16 @@ import android.util.Log;
  *
  */
 public class GameBoard {
-    private Bitmap boardImage = null;
-    private ArrayList<GameTile[]> gameBoard = null;
-    private GameTile blankTile = null;
+    public static final int EASY_DIFFICULTY = 9;
+    public static final int MEDIUM_DIFFICULTY = 16;
+    public static final int HARD_DIFFICULTY = 25;
+
+    private Bitmap boardImage;
+    private ArrayList<GameTile[]> gameBoard;
+    private ArrayList<GameTile> gameTiles;
+    
+    private GameTile blankTile;
+    private int numberOfMoves;
     
     private final int GAME_DIFFICULTY;
     private final int BOARD_ROWS;
@@ -41,23 +48,15 @@ public class GameBoard {
     public GameBoard(Bitmap b, int difficulty) {
         boardImage = b;
         gameBoard = new ArrayList<GameTile[]>();
+        numberOfMoves = 0;
 
         GAME_DIFFICULTY = difficulty;
         BOARD_ROWS = (int)Math.sqrt(GAME_DIFFICULTY);
         BOARD_COLUMNS = (int)Math.sqrt(GAME_DIFFICULTY);
-
-        generateGameBoard();
+        
+        newBoard();
     }
-    
-    /**
-     * Provides the data structure for the game board in rows and columns
-     * 
-     * @return gameboard elements
-     */
-    public ArrayList<GameTile[]> getGameBoard() {
-        return gameBoard;
-    }
-    
+        
     /**
      * Returns the blank GameTile object
      * 
@@ -67,8 +66,86 @@ public class GameBoard {
         return blankTile;
     }
 
-    private void generateGameBoard() {
+    /**
+     * Create a NxN board with empty tiles
+     * 
+     * @return arraylist of gametiles
+     */
+    public void newBoard() {
+        Log.i("nPuzzle", "Generating " + BOARD_ROWS + "X" + BOARD_COLUMNS + " puzzle.");
+
+        // create board w/empty tiles
+        for (int i = 0; i < GAME_DIFFICULTY; i++) {
+
+            if (i == GAME_DIFFICULTY) {
+                // last tile (blank)
+                blankTile = new GameTile(null, i, true);
+                gameTiles.add(blankTile);
+            } else {
+                // regular tile
+                gameTiles.add(new GameTile(null, i, false));
+            }
+
+        }
+    }
+    /**
+     * Sets the game board image.  This can be called if needed during a device rotation because the screen height and width change.
+     * 
+     * Once the game board image changes the tiles will be regenerated.
+     * 
+     * @param b
+     */
+    public void setBoardImage(Bitmap b) {
+        boardImage = b;
+
+        generateBoardTiles();
+    }
+
+    /**
+     * Generate tile images for the game board
+     * 
+     */
+    public void generateBoardTiles() {
+        int imageHeight = boardImage.getHeight();
+        int imageWidth = boardImage.getWidth();
+
+        int tileWidth = imageWidth / BOARD_COLUMNS;
+        int tileHeight = imageHeight / BOARD_ROWS;
+
+        Log.i("nPuzzle", "Board Image Height: " + imageHeight + ", Width: " + imageWidth);
+        Log.i("nPuzzle", "Tile height: " + tileHeight + ", width: " + tileWidth);
+
+        int tilePosition = 0;
+        Bitmap tileBitmap = null;
+        GameTile t;
+      
+        // Bitmap slicing
+        for (int i = 0; i < BOARD_ROWS; i++) {
+            for (int j = 0; j < BOARD_COLUMNS; j++) {
+                t = gameTiles.get(tilePosition);
+                
+                // Generate new bitmap tile
+                int x = j * tileWidth;
+                int y = i * tileHeight;
+
+                if (tilePosition == GAME_DIFFICULTY) {
+                    // last tile (blank)
+                    tileBitmap = Bitmap.createBitmap(tileWidth, tileHeight, Config.ALPHA_8);
+                } else {
+                    // regular tile
+                    tileBitmap = Bitmap.createBitmap(boardImage, x, y, tileWidth, tileHeight);
+                }
+
+                t.setBitmap(tileBitmap);
+                tilePosition++;
+            }
+        }
         
+        Log.i("nPuzzle", "Completed generating tile bitmaps.");        
+    }
+
+    public ArrayList<GameTile[]> generateNewGameBoard(int deviceHeight, int deviceWidth) {
+
         // Bitmap slicing
         Log.i("nPuzzle", "Generating " + BOARD_ROWS + "X" + BOARD_COLUMNS + " puzzle.");
         
@@ -95,18 +172,16 @@ public class GameBoard {
                 int x = j * tileWidth;
                 int y = i * tileHeight;
 
-                Log.i("nPuzzle", "Debug: i: " + i + ", j: " + j + ", x: " + x + ", y: " + y + ", tilePosition: " + tilePosition);
-
-                if (tilePosition != (gameDifficulty - 1)) {
-                    tileBitmap = Bitmap.createBitmap(boardImage, x, y, tileWidth, tileHeight);
-
-                    gt[j] = new GameTile(tileBitmap, tilePosition, false);
-                } else {
+                if (tilePosition == GAME_DIFFICULTY) {
                     // last tile (blank)
                     tileBitmap = Bitmap.createBitmap(tileWidth, tileHeight, Config.ALPHA_8);
                     gt[j] = new GameTile(tileBitmap, tilePosition, true);
 
                     blankTile = gt[j];
+                } else {
+                    // regular tile
+                    tileBitmap = Bitmap.createBitmap(boardImage, x, y, tileWidth, tileHeight);
+                    gt[j] = new GameTile(tileBitmap, tilePosition, false);
                 }
 
                 tilePosition++;
@@ -119,18 +194,47 @@ public class GameBoard {
         
         Log.i("nPuzzle", "Completed generating gameboard.");
 
+        return gameBoard;
     }
     
-    // The shuffling here might be a bad idea - the items on the table view might need to be re-shuffled instead
+    /**
+     * Shuffle the game board
+     * 
+     * This shuffle will perform a reverse-tile shuffle (with consideration for even numbered difficulty levels)
+     */
     public void shuffleBoard() {
-//        ArrayList<GameTile> tmp = new ArrayList<GameTile>(gt.size());
+        GameTile tile;
+        GameTile swap;
 
-        // reverse pieces
- //       for (int i = gt.size() - 1; i > 0 ; i++) {
- //           tmp.add(gt.get(i));
- //       }
-        
-        // perform last 2 tile swap check
+        int newPosition = 1;
+
+        // define the amount of iterations needed to swap all tiles on the board
+        int swapIterations = (GAME_DIFFICULTY - 1) / 2;
+
+        // perform the tile swap/shuffle by flipping the order
+        // Example: in a 3x3 grid tile 8->1 and 1->8, 7->2 and 2->7, etc.
+        for (int i = 0; i < swapIterations; i++) {             
+            tile = getTileByPosition(i);
+            swap = getTileByPosition(newPosition);
+            
+            // only move the non-blank tiles
+            if ( (tile.isBlankTile() == false) && (swap.isBlankTile() == false) ) {
+                tile.setPosition(newPosition);
+                swap.setPosition(i);
+                newPosition++;
+            }
+        }
+
+        // perform last 2 tile swap check    
+        if ((GAME_DIFFICULTY % 2) == 0) {
+            
+            // swap the last 2 "Real" tiles (original tiles #1 and #2) for solvability
+            tile = getTileByPosition(GAME_DIFFICULTY - 1);
+            swap = getTileByPosition(GAME_DIFFICULTY - 2);
+
+            tile.setPosition(GAME_DIFFICULTY - 2);
+            swap.setPosition(GAME_DIFFICULTY - 1);
+        }
     }
     
     /**
@@ -154,6 +258,15 @@ public class GameBoard {
 
         return null;
     }
+   
+    /**
+     * Returns the number of moves in a game.
+     * 
+     * @return number of moves
+     */
+    public int getNumberOfMoves() {
+        return numberOfMoves;
+    }
 
     /**
      * This method will attempt to move a tile by verifying if the blank tile is adjacent.
@@ -176,6 +289,8 @@ public class GameBoard {
         // swap positions of game tile and blank tile
         blankTile.setPosition(currentPosition);
         tile.setPosition(newPosition);
+
+        numberOfMoves++;
 
         return true;
     }

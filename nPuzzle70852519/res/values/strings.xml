@@ -5,5 +5,10 @@
     <string name="app_name">nPuzzle70852519</string>
     <string name="no_photos">No photos</string>
     <string name="ImagePrefix">puzzle_</string>
+    <string name="PickAnother">Pick Another</string>
+    <string name="Shuffle">Shuffle</string>
+    <string name="Easy">Easy</string>
+    <string name="Medium">Medium</string>
+    <string name="Hard">Hard</string>
 
 </resources>

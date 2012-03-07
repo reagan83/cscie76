@@ -44,6 +44,14 @@ public class GameTile {
     }
     
     /**
+     * Set method for updating the object's Bitmap.
+     * 
+     */
+    public void setBitmap(Bitmap b) {
+        bitmap = b;
+    }
+
+    /**
      * Get method for returning the object's position.
      * 
      * @return tilePosition
