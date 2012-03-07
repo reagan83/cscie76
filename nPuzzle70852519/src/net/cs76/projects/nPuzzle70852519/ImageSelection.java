@@ -54,12 +54,12 @@ public class ImageSelection extends ListActivity {
            
             ImageIdList = new ArrayList<Integer>();
             
+            Log.i("nPuzzle", "To do: remove the i < 10 on this section");
             for (int i = 0; i < 10; i++) {
                 String p = getResources().getString(R.string.ImagePrefix);
                 int id = 0;
                 
                 id = getResources().getIdentifier("drawable/" + p + i, null, getPackageName());
-                Log.i("nPuzzle", "Testing-" + i + ": " + id );
                 
                 if (id > 0) {
                     ImageIdList.add(id);                   
@@ -144,8 +144,6 @@ public class ImageSelection extends ListActivity {
 
         // retrieve the image resource id from the list row tag and send it to the new activity
         game.putExtra("ImageResourceId", (Integer)v.getTag());
-        
-        Log.i("nPuzzle", "Storing as: " + v.getTag().toString());
 
         startActivityForResult(game, 0);
     }

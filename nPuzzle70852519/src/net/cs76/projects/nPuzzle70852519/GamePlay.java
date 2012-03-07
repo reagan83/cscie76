@@ -12,6 +12,7 @@ import java.util.List;
 import net.cs76.projects.nPuzzle70852519.R;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +20,7 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,6 +28,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TableLayout;
@@ -77,11 +80,6 @@ public class GamePlay extends Activity {
         Log.i("nPuzzle", "Image Scale: " + imageScale);
 
         Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, (int)(imageWidth * imageScale), (int)(imageHeight * imageScale), false);
-
-        image.setImageBitmap(scaledIcon);
-
-        tr.addView(image);
-        tl.addView(tr);
         
         TableRow tr2 = new TableRow(this);
         
@@ -89,12 +87,61 @@ public class GamePlay extends Activity {
         Bitmap icon2 = Bitmap.createBitmap(scaledIcon, 0, 0, 50, 50);
         
         image2.setImageBitmap(icon2);
+        
+        GameBoard gb = new GameBoard(scaledIcon, 9);
+        
+        ArrayList<GameTile[]> board = gb.getGameBoard();
+        
+        GameTile[] tiles = null;
+        int tilesLength = 0;
+        
+        Log.i("nPuzzle", "Gameboard Size: " + board.size());
+        
+        // build the game board table (rows x columns)
+        
+        for (int i = 0; i < board.size(); i++) {
+            tiles = board.get(i);
+            tilesLength = tiles.length;
 
-        tr2.addView(image2);
-        tl.addView(tr2);
+            Log.i("nPuzzle", "New row[" + i + "]");
+            Log.i("nPuzzle", "tilesLength: " + tilesLength);
+            
+            tr2 = new TableRow(this);
+
+            for (int j = 0; j < tilesLength; j++) {
+                ImageView iv = new ImageView(this);
+                ImageButton ib = new ImageButton(this);
+                
+                Log.i("nPuzzle", "Image setting j: " + j);
+
+                ib.setImageBitmap(tiles[j].getBitmap());
+                ib.setPadding(1, 1, 1, 1);
+
+                ib.setTag(tiles[j].getTilePosition());
+                Log.i("nPuzzle", "Set tag: " + tiles[j].getTilePosition());
+                
+                ib.setOnClickListener(new View.OnClickListener() {
+                    
+                    @Override
+                    public void onClick(View v) {
+                        Log.i("nPuzzle", "Image touched!" + v.getTag());                        
+                    }
+                });
+                               
+
+                tr2.addView(ib);
+            }
+            
+           
+            tl.addView(tr2);
+        }
 
         Log.i("nPuzzle", "onCreate GamePlay complete.");
 
+    }
+    
+    public void onTileClickHandler(View v) {
+        Log.i("nPuzzle", "Tile Click Handler - " + v.getTag());
     }
 
 }

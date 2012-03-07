@@ -3,5 +3,6 @@
 	android:id="@+id/GameTable"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:stretchColumns="*" >
+	android:stretchColumns="*"
+	android:onClick="onTileClickHandler" >
 </TableLayout>
