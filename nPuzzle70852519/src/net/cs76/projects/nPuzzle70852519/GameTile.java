@@ -11,29 +11,30 @@ import android.graphics.Bitmap;
 /**
  * GameTile Class
  * 
- * This class stores tile specific information such as the image, position and if it is a blank tile.
+ * This class stores tile specific information such as the image, position and
+ * if it is a blank tile.
  * 
  * @author rwilliams
- *
+ * 
  */
 public class GameTile {
-    Bitmap bitmap = null;
-    int tilePosition = 0;
-    boolean blankTile = false;
-    
-    /** 
+    private Bitmap bitmap;
+    private int tilePosition;
+
+    private final boolean blankTile;
+
+    /**
      * GameTile Constructor that configures the class variables.
      * 
      * @param b
      * @param pos
      * @param blank
      */
-    public GameTile(Bitmap b, int pos, boolean blank) {
-        bitmap = b;
+    public GameTile(int pos, boolean blank) {
         tilePosition = pos;
         blankTile = blank;
     }
-    
+
     /**
      * Get method for returning the object's Bitmap.
      * 
@@ -42,7 +43,7 @@ public class GameTile {
     public Bitmap getBitmap() {
         return bitmap;
     }
-    
+
     /**
      * Set method for updating the object's Bitmap.
      * 
@@ -59,7 +60,7 @@ public class GameTile {
     public int getPosition() {
         return tilePosition;
     }
-    
+
     /**
      * Set method for updating the object's position.
      * 
