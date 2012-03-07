@@ -36,8 +36,8 @@ import java.lang.reflect.Field;
 /**
  * ImageSelection Class Activity
  * 
- * This class loads a pre-defined set of image files and displays them to the user in
- * an Image Gallery to select.
+ * This class loads set of image files and displays them to the user in
+ * a gallery format to select for the nPuzzle game.
  * 
  * @author rwilliams
  * @extends ListActivity

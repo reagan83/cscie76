@@ -9,9 +9,11 @@ package net.cs76.projects.nPuzzle70852519;
 import android.graphics.Bitmap;
 
 /**
- * Comments here!
+ * GameTile Class
  * 
- * @author reagan
+ * This class stores tile specific information such as the image, position and if it is a blank tile.
+ * 
+ * @author rwilliams
  *
  */
 public class GameTile {
@@ -19,22 +21,51 @@ public class GameTile {
     int tilePosition = 0;
     boolean blankTile = false;
     
+    /** 
+     * GameTile Constructor that configures the class variables.
+     * 
+     * @param b
+     * @param pos
+     * @param blank
+     */
     public GameTile(Bitmap b, int pos, boolean blank) {
         bitmap = b;
         tilePosition = pos;
         blankTile = blank;
     }
     
-    // comments
+    /**
+     * Get method for returning the object's Bitmap.
+     * 
+     * @return bitmap
+     */
     public Bitmap getBitmap() {
         return bitmap;
     }
     
-    // comments
-    public int getTilePosition() {
+    /**
+     * Get method for returning the object's position.
+     * 
+     * @return tilePosition
+     */
+    public int getPosition() {
         return tilePosition;
     }
     
+    /**
+     * Set method for updating the object's position.
+     * 
+     * @param p
+     */
+    public void setPosition(int p) {
+        tilePosition = p;
+    }
+
+    /**
+     * Test method for determining if a tile is blank or not.
+     * 
+     * @return blankTile
+     */
     public boolean isBlankTile() {
         return blankTile;
     }

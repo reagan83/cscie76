@@ -17,6 +17,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,6 +38,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.lang.reflect.Field;
 
+// Item checks before submission:
+//
+//
+// check all items are wrapped in appropriate try/catch blocks (no crashing!)
+// test images with > 10 images
+// test images with HUGE images
+// test with very small images
+// test with no images
+// make sure everything is commented
+// make sure curly braces align
+// make sure indentation is accurate
+// make sure images load dynamically (not i = 1 -> 10)
+// test swapping the layout to portrait
+// test sending the app to the back of the stack, and bringing it back
+// re-read doc to make sure i have everything
+// create a menu dialog w/different difficulty levels
+// create 3 second countdown text showing the solved puzzle
+// create "You win" scenario! track # of moves
 
 /**
  * GamePlay Class Activity
@@ -49,16 +68,18 @@ import java.lang.reflect.Field;
 public class GamePlay extends Activity {
     
     GameBoard gb = null;
+    TableLayout tl = null;
+    TableRow tr = null;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Log.i("nPuzzle", "onCreate GamePlay");
         setContentView(R.layout.gameboard);
 
-        TableLayout tl = (TableLayout) findViewById(R.id.GameTable);
-        TableRow tr = new TableRow(this);
+        tl = (TableLayout) findViewById(R.id.GameTable);
         
         int GameImageId = getIntent().getExtras().getInt("ImageResourceId");
         
@@ -84,7 +105,7 @@ public class GamePlay extends Activity {
 
         Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, (int)(imageWidth * imageScale), (int)(imageHeight * imageScale), false);
         
-        TableRow tr2 = new TableRow(this);
+        tr = new TableRow(this);
         
         ImageView image2 = new ImageView(this);
         Bitmap icon2 = Bitmap.createBitmap(scaledIcon, 0, 0, 50, 50);
@@ -100,47 +121,62 @@ public class GamePlay extends Activity {
         
         Log.i("nPuzzle", "Gameboard Size: " + board.size());
         
-        // build the game board table (rows x columns)
-        
+        // build the game board table (rows x columns)        
         for (int i = 0; i < board.size(); i++) {
             tiles = board.get(i);
             tilesLength = tiles.length;
-
-            Log.i("nPuzzle", "New row[" + i + "]");
-            Log.i("nPuzzle", "tilesLength: " + tilesLength);
             
-            tr2 = new TableRow(this);
+            tr = new TableRow(this);
 
             for (int j = 0; j < tilesLength; j++) {
-                ImageView iv = new ImageView(this);
                 ImageButton ib = new ImageButton(this);
-                
-                Log.i("nPuzzle", "Image setting j: " + j);
 
                 ib.setImageBitmap(tiles[j].getBitmap());
                 ib.setPadding(1, 1, 1, 1);
 
-                ib.setTag(tiles[j].getTilePosition());
-                Log.i("nPuzzle", "Set tag: " + tiles[j].getTilePosition());
+                ib.setTag(tiles[j].getPosition());
+                Log.i("nPuzzle", "Set tag: " + tiles[j].getPosition());
 
                 ib.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.i("nPuzzle", "Image touched!" + v.getTag());
-                        ImageButton b = (ImageButton) v;
+                        int clickPosition = (Integer)v.getTag();
+                        int blankPosition = gb.getBlankTile().getPosition();
 
-                        b.setImageBitmap(gb.getBlankTile().getBitmap());
+                        Log.i("nPuzzle", "Image click position: " + clickPosition);
+                        Log.i("nPuzzle", "Blank tile position: " + blankPosition);
+
+                        if (gb.move(gb.getTileByPosition(clickPosition)) == true) {
+                            swapImageButtonTiles(clickPosition, blankPosition);
+                        }
                     }
                 });
 
-                tr2.addView(ib);
+                tr.addView(ib);
             }
            
-            tl.addView(tr2);
+            tl.addView(tr);
         }
 
         Log.i("nPuzzle", "onCreate GamePlay complete.");
 
+    }
+    
+    private void swapImageButtonTiles(int clickPosition, int blankPosition) {
+        ImageButton trSwap1 = (ImageButton)tl.findViewWithTag(clickPosition);
+        ImageButton trSwap2 = (ImageButton)tl.findViewWithTag(blankPosition);
+        
+        if (trSwap1 == null) {
+            Log.i("nPuzzle", "trSwap1 is null");
+        }
+        if (trSwap2 == null) {
+            Log.i("nPuzzle", "trSwap2 is null");
+        }
+        
+        Drawable temp = trSwap1.getDrawable();
+        
+        trSwap1.setImageDrawable(trSwap2.getDrawable());
+        trSwap2.setImageDrawable(temp);
     }
 
 }
